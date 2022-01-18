@@ -77,13 +77,13 @@ $FilesCSV = "Files_$(Get-Date -Format 'yyyyMMdd_hhmmss').csv"
 $FoldersCSV = "Folders_$(Get-Date -Format 'yyyyMMdd_hhmmss').csv"
 
 # Set the filenames of customised csv's
-$ExportedFilesCSV = "Exported_Files_$(Get-Date -Format 'yyyyMMdd_hhmmss').csv"
-$ExportedFoldersCSV = "Exported_Folders_$(Get-Date -Format 'yyyyMMdd_hhmmss').csv"
+$ExportedFilesCSV = "Exported_Files.csv"
+$ExportedFoldersCSV = "Exported_Folders.csv"
 
 # Set the filenames of html reports
-$ExportedFilesHTML = "Largest_Files_$(Get-Date -Format 'yyyyMMdd_hhmmss').html"
-$ExportedFoldersHTML = "Largest_Folders_$(Get-Date -Format 'yyyyMMdd_hhmmss').html"
-$SummaryHTMLReport = "Disk_Usage_Summary_$(Get-Date -Format 'yyyyMMdd_hhmmss').html"
+$ExportedFilesHTML = "Largest_Files_Report.html"
+$ExportedFoldersHTML = "Largest_Folders_Report.html"
+$SummaryHTMLReport = "Disk_Usage_Summary.html"
 
 # Run the WizTree portable app
 Start-Process -FilePath "$RunLocation\WizTree64.exe" -ArgumentList """$Env:SystemDrive"" /export=""$TempLocation\$FilesCSV"" /admin 1 /sortby=2 /exportfolders=0" -Verb runas -Wait
@@ -251,21 +251,8 @@ $html |
 
 #region Copy files to share
 
-# Create a subfolder with computername if doesn't exist
-If (!(Test-Path $TargetRoot\$env:COMPUTERNAME))
-{
-    $null = New-Item -Path $TargetRoot -Name $env:COMPUTERNAME -ItemType Directory
-}
-
-# Create a subdirectory with current date-time
-$DateString = ((Get-Date).ToUniversalTime() | get-date -Format "yyyy-MM-dd_HH-mm-ss").ToString()
-If (!(Test-Path $TargetRoot\$env:COMPUTERNAME\$DateString))
-{
-    $null = New-Item -Path $TargetRoot\$env:COMPUTERNAME -Name $DateString -ItemType Directory
-}
-
 # Set final target location
-$TargetLocation = "$TargetRoot\$env:COMPUTERNAME\$DateString"
+$TargetLocation = "$TargetRoot\"
 
 # Copy files
 $Files = @(
